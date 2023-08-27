@@ -15,7 +15,7 @@ class HistoryData:
         self.base_url = "http://www.cwl.gov.cn"
         self.history_url = "http://www.cwl.gov.cn/cwl_admin/front/cwlkj/search/kjxx/findDrawNotice"
 
-    def _make_history_params(self):
+    def _make_history_params(self, page_size=100):
         params = {
             "name": "kl8",
             "issueCount": "",
@@ -24,7 +24,7 @@ class HistoryData:
             "dayStart": "",
             "dayEnd": "",
             "pageNo": "1",
-            "pageSize": "100",
+            "pageSize": str(page_size),
             "week": "",
             "systemType": "PC"
         }
@@ -39,8 +39,8 @@ class HistoryData:
 
         return headers
 
-    def get_data(self):
-        query_params = self._make_history_params()
+    def get_data(self, history_count=100):
+        query_params = self._make_history_params(history_count)
         headers = self._make_history_headers()
 
         resp = requests.get(self.history_url, params=query_params, headers=headers)
