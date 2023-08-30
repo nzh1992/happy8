@@ -59,6 +59,39 @@ class AreaStatistic:
         return area_range_dict
 
 
+class HeatStatistic:
+    @classmethod
+    def heat_statistic(cls, data_list, period_count):
+        """
+        统计给定期数内(从当前期开始计算)的中奖号码累计出现次数
+
+        :param data_list: list. 全部历史数据
+        :param period_count: int. 给定期数
+        :return:
+        """
+        # 获取指定期数内的历史数据
+        if period_count == 'all':
+            # 全部期数，不做处理
+            pass
+        else:
+            data_list = data_list[:period_count]
+
+        # 统计各个号码出现的次数
+        numbs = list(range(1, 81))
+        init_values = [0] * 80
+        heat_result = dict(zip(numbs, init_values))
+
+        for d in data_list:
+            red_numbers = d.get("red")
+            red_number_list = [int(red_number) for red_number in red_numbers.split(",")]
+
+            for red_number in red_number_list:
+                heat_result[int(red_number)] += 1
+
+        return heat_result
+
+
+
 if __name__ == '__main__':
     data = '02,07,10,13,28,29,34,36,37,38,44,48,49,50,52,57,59,63,65,72'
     area_count = 8
