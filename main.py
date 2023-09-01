@@ -30,61 +30,62 @@ def start_statistic(data_list):
     """
     # 1. 分区数量统计
     # 预设分区数量：2(大小区)，4（4分区），8，10，20，40
-    # area_count_list = [2, 4, 8, 10, 20, 40]
-    # for area_count in area_count_list:
-    #     file_name = f"{area_count}分区统计.xlsx"
-    #     print(f"正在生成'{file_name}'")
-    #
-    #     stat_result = []    # 所有统计结果
-    #     period_list = []    # 所有期数
-    #     red_list = []       # 所有中奖号码
-    #
-    #     for d in data_list:
-    #         # 计算每期统计结果
-    #         data = d.get("red")
-    #         area_count_result = AreaStatistic.count_statistic(data, area_count)
-    #         stat_result.append(area_count_result)
-    #
-    #         # 每期元信息
-    #         period_list.append(d.get("code"))
-    #         red_list.append(data)
-    #
-    #     # 统计df
-    #     df = pd.DataFrame(stat_result)
-    #
-    #     # 元信息df
-    #     mate_dict = {'period': period_list, 'red': red_list}
-    #     mate_df = pd.DataFrame(mate_dict)
-    #
-    #     # 拼接统计和元信息，组成新df
-    #     result_df = pd.concat([mate_df, df], axis=1)
-    #
-    #     # 生成excel
-    #     file_dir = os.path.join(get_statistic_result_dir(), "area")
-    #     os.makedirs(file_dir, exist_ok=True)
-    #     fp = os.path.join(file_dir, file_name)
-    #     result_df.to_excel(fp, index=False)
-    #     print(f"'{file_name}'生成成功.")
-    #     print("-" * 50)
+    area_count_list = [2, 4, 8, 10, 20, 40]
+    for area_count in area_count_list:
+        file_name = f"{area_count}分区统计.xlsx"
+        print(f"正在生成'{file_name}'")
+
+        stat_result = []    # 所有统计结果
+        period_list = []    # 所有期数
+        red_list = []       # 所有中奖号码
+
+        for d in data_list:
+            # 计算每期统计结果
+            data = d.get("red")
+            area_count_result = AreaStatistic.count_statistic(data, area_count)
+            stat_result.append(area_count_result)
+
+            # 每期元信息
+            period_list.append(d.get("code"))
+            red_list.append(data)
+
+        # 统计df
+        df = pd.DataFrame(stat_result)
+
+        # 元信息df
+        mate_dict = {'period': period_list, 'red': red_list}
+        mate_df = pd.DataFrame(mate_dict)
+
+        # 拼接统计和元信息，组成新df
+        result_df = pd.concat([mate_df, df], axis=1)
+
+        # 生成excel
+        file_dir = os.path.join(get_statistic_result_dir(), "area")
+        os.makedirs(file_dir, exist_ok=True)
+        fp = os.path.join(file_dir, file_name)
+        result_df.to_excel(fp, index=False)
+        print(f"'{file_name}'生成成功.")
+        print("-" * 50)
 
     # 2. 热力图
     # 预设历史数据期数：20，50，100，200，300，500，全部
-    # period_count_list = [20, 50, 100, 200, 300, 500, 'all']
-    # heat_result_list = []
-    # for period_count in period_count_list:
-    #     heat_result = HeatStatistic.heat_statistic(data_list, period_count)
-    #     heat_result_list.append(heat_result)
-    #
-    # df = pd.DataFrame(heat_result_list, index=period_count_list)
-    #
-    # heat_file_name = "haet_map.xlsx"
-    # haet_file_dir = os.path.join(get_statistic_result_dir(), "heat_map")
-    # os.makedirs(haet_file_dir, exist_ok=True)
-    # heat_fp = os.path.join(haet_file_dir, heat_file_name)
-    # df.to_excel(heat_fp)
-    # print(f"{heat_file_name}生成成功")
-    # print("-" * 50)
+    period_count_list = [20, 50, 100, 200, 300, 500, 'all']
+    heat_result_list = []
+    for period_count in period_count_list:
+        heat_result = HeatStatistic.heat_statistic(data_list, period_count)
+        heat_result_list.append(heat_result)
+
+    df = pd.DataFrame(heat_result_list, index=period_count_list)
+
+    heat_file_name = "haet_map.xlsx"
+    haet_file_dir = os.path.join(get_statistic_result_dir(), "heat_map")
+    os.makedirs(haet_file_dir, exist_ok=True)
+    heat_fp = os.path.join(haet_file_dir, heat_file_name)
+    df.to_excel(heat_fp)
+    print(f"{heat_file_name}生成成功")
+    print("-" * 50)
     # 热力图分析
+    pass
 
     # 3. 历史开奖表
     period_list = []
