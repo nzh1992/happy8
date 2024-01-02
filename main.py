@@ -6,6 +6,7 @@ Last Modified: 2023/7/8
 Description: 
 """
 import os
+import random
 
 import pandas as pd
 
@@ -68,8 +69,8 @@ def start_statistic(data_list):
         print("-" * 50)
 
     # 2. 热力图
-    # 预设历史数据期数：20，50，100，200，300，500，全部
-    period_count_list = [20, 50, 100, 200, 300, 500, 'all']
+    # 预设历史数据期数：20，30，50，100，200，300，500，全部
+    period_count_list = [20, 30, 50, 100, 200, 300, 500, 'all']
     heat_result_list = []
     for period_count in period_count_list:
         heat_result = HeatStatistic.heat_statistic(data_list, period_count)
@@ -86,6 +87,17 @@ def start_statistic(data_list):
     print("-" * 50)
     # 热力图分析
     pass
+
+    # 近20期热号列表（出现大于等于6次表示热号）
+    period20_dict = heat_result_list[0]
+    period20_list = list(period20_dict.items())
+    period20_list.sort(key=lambda x: x[1], reverse=True)
+    hot20_top20 = period20_list[:20]
+    # 从20个热号中，随机取5个
+    random_hot_5_1 = random.sample(hot20_top20, 5)
+    print(f"从20个热号中，随机取5个: {random_hot_5_1}")
+    random_hot_5_2 = random.sample(hot20_top20, 5)
+    print(f"从20个热号中，随机取5个: {random_hot_5_2}")
 
     # 3. 历史开奖表
     period_list = []

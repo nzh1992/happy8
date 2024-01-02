@@ -43,6 +43,6 @@ class HistoryData:
         query_params = self._make_history_params(history_count)
         headers = self._make_history_headers()
 
-        resp = requests.get(self.history_url, params=query_params, headers=headers)
+        resp = requests.get(self.history_url, params=query_params, headers=headers, verify=False)
 
         return json.loads(resp.content)

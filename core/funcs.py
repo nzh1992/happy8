@@ -91,7 +91,6 @@ class HeatStatistic:
         return heat_result
 
 
-
 if __name__ == '__main__':
     data = '02,07,10,13,28,29,34,36,37,38,44,48,49,50,52,57,59,63,65,72'
     area_count = 8
