@@ -5,6 +5,9 @@ Created Date: 2023/8/27
 Last Modified: 2023/8/27
 Description: 统计方法
 """
+import random
+import copy
+
 from core.exceptions import AreaCountError
 
 
@@ -89,6 +92,61 @@ class HeatStatistic:
                 heat_result[int(red_number)] += 1
 
         return heat_result
+
+
+class LessStatistic:
+    """出现次数最少的top10统计"""
+    @staticmethod
+    def less_statistic(df, period_count, top=10):
+        """
+        统计给定期数内(从当前期开始计算)的中奖号码累计出现次数最少的前十名
+
+        :param df: pd.DataFrame. 历史数据
+        :param period_count: int. 统计期数.
+        :param top: int. 前N名，默认是前10名
+        :return:
+        """
+        target_df = df[:period_count]
+
+        # 中奖号码计数
+        numbers = [i for i in range(1, 81)]
+        init_number = [0] * 80
+        total_dict = dict(zip(numbers, init_number))
+
+        # 遍历DF
+        for row in target_df.iterrows():
+            for num, is_red in row[1].items():
+                if is_red:
+                    total_dict[int(num)] += 1
+
+        # 按升序排序
+        sorted_list = sorted(total_dict.items(), key=lambda x: x[1], reverse=False)
+
+        # 输出
+        print(f"最近{period_count}期，中奖次数最少的号码如下：")
+        for number, count in sorted_list[:top]:
+            print(f"数字：{number}，出现次数: {count}")
+
+        # 冷号排序
+        sorted_numbers = [l[0] for l in sorted_list[:top]]
+        sorted_numbers.sort(reverse=False)
+        print(f"冷号排序: {sorted_numbers}")
+
+        return sorted_numbers
+
+
+class RamdomSet:
+    def __init__(self, data):
+        """用一个数据集合初始化data"""
+        self.data = list(data)
+
+    def get(self, length):
+        """从数据集合中随机获取length个元素，并按升序排列后返回"""
+        data_copy = copy.deepcopy(self.data)
+        random.shuffle(data_copy)
+        result = data_copy[:length]
+        result.sort(reverse=False)
+        return result
 
 
 if __name__ == '__main__':

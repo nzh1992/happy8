@@ -11,7 +11,7 @@ import random
 import pandas as pd
 
 from core.data import HistoryData
-from core.funcs import AreaStatistic, HeatStatistic
+from core.funcs import AreaStatistic, HeatStatistic, LessStatistic, RamdomSet
 
 
 def get_statistic_result_dir():
@@ -85,8 +85,8 @@ def start_statistic(data_list):
     df.to_excel(heat_fp)
     print(f"{heat_file_name}生成成功")
     print("-" * 50)
+
     # 热力图分析
-    pass
 
     # 近20期热号列表（出现大于等于6次表示热号）
     period20_dict = heat_result_list[0]
@@ -155,11 +155,37 @@ def start_statistic(data_list):
     print("-" * 50)
 
 
+
 if __name__ == '__main__':
     # 获取历史数据
-    data = HistoryData().get_data(history_count=995)
+    # data = HistoryData().get_data(history_count=995)
 
     # 历史数据列表
-    data_list = data.get("result")
+    # data_list = data.get("result")
 
-    start_statistic(data_list)
+    # start_statistic(data_list)
+
+    # 获取历史数据，df格式
+    df = HistoryData().get_df(history_count=2000)
+    less_40 = LessStatistic().less_statistic(df, period_count=2000, top=40)
+
+    # 计算热号40个
+    hot_40 = set(range(1, 81)) - set(less_40)
+
+    # 剔除我认为的低概率号
+    # 1. 1~10号
+    out_1 = set(range(1, 11))
+    # 2. 10~20号
+    out_2 = set(range(11, 21))
+
+    # 选号集合
+    random_set = hot_40 - out_1
+    print(f"选号集合,共计{len(random_set)}个，如下：")
+    print(f"{random_set}")
+
+    # 随机5注
+    # 规则：从热号集合中机选10个。
+    print("开始随机生成5注，快乐8选10玩法：")
+    for i in range(5):
+        hot_10 = RamdomSet(random_set).get(10)
+        print(f"第{i+1}注: {hot_10}")
