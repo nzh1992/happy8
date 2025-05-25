@@ -77,3 +77,22 @@ class HistoryData:
         df = pd.DataFrame(data=data_list, index=index_list, columns=[str(i) for i in range(1, 81)])
 
         return df
+
+    def get_numbers_list(self, history_count=100):
+        """
+        获取中奖结果，以二维list的方式
+        :return:
+        """
+        content = self.get_data(history_count)
+        results = content.get("result")
+
+        numbers_list = []
+
+        for result in results:
+            reds = [int(r) for r in result.get("red").split(",")]
+            numbers_list.append(reds)
+
+        return numbers_list
+
+if __name__ == '__main__':
+    HistoryData().get_numbers_list()

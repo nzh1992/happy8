@@ -70,7 +70,7 @@ def start_statistic(data_list):
 
     # 2. 热力图
     # 预设历史数据期数：20，30，50，100，200，300，500，全部
-    period_count_list = [20, 30, 50, 100, 200, 300, 500, 'all']
+    period_count_list = [5, 10, 20, 30, 50, 100, 200, 300, 500, 'all']
     heat_result_list = []
     for period_count in period_count_list:
         heat_result = HeatStatistic.heat_statistic(data_list, period_count)
@@ -176,10 +176,10 @@ if __name__ == '__main__':
     # 1. 1~10号
     out_1 = set(range(1, 11))
     # 2. 10~20号
-    out_2 = set(range(11, 21))
+    out_2 = set(range(11, 31))
 
     # 选号集合
-    random_set = hot_40 - out_1
+    random_set = hot_40 - out_1 - out_2
     print(f"选号集合,共计{len(random_set)}个，如下：")
     print(f"{random_set}")
 
