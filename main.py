@@ -9,9 +9,10 @@ import os
 import random
 
 import pandas as pd
+import scipy
 
 from core.data import HistoryData
-from core.funcs import AreaStatistic, HeatStatistic, LessStatistic, RamdomSet
+from core.funcs import AreaStatistic, HeatStatistic, LessStatistic, RamdomSet, PerformStatistic
 
 
 def get_statistic_result_dir():
@@ -36,9 +37,9 @@ def start_statistic(data_list):
         file_name = f"{area_count}分区统计.xlsx"
         print(f"正在生成'{file_name}'")
 
-        stat_result = []    # 所有统计结果
-        period_list = []    # 所有期数
-        red_list = []       # 所有中奖号码
+        stat_result = []  # 所有统计结果
+        period_list = []  # 所有期数
+        red_list = []  # 所有中奖号码
 
         for d in data_list:
             # 计算每期统计结果
@@ -155,7 +156,6 @@ def start_statistic(data_list):
     print("-" * 50)
 
 
-
 if __name__ == '__main__':
     # 获取历史数据
     # data = HistoryData().get_data(history_count=995)
@@ -173,19 +173,36 @@ if __name__ == '__main__':
     hot_40 = set(range(1, 81)) - set(less_40)
 
     # 剔除我认为的低概率号
-    # 1. 1~10号
+    # 1.1 1~10号
     out_1 = set(range(1, 11))
-    # 2. 10~20号
+    # 1.2 11~20号
     out_2 = set(range(11, 21))
 
+    # 2. 343期出现号码
+    out_3 = set([7, 22, 27, 28, 31, 34, 37, 42, 44, 45, 46, 49, 54, 57, 66, 67, 72, 76, 78, 80])
+    print(f"排除上一期（343期）开奖号码：")
+    print(f"{out_3}")
+    print("---" * 30)
+
     # 选号集合
-    random_set = hot_40 - out_1
+    random_set = hot_40 - out_1 - out_2
     print(f"选号集合,共计{len(random_set)}个，如下：")
     print(f"{random_set}")
+    print("---" * 30)
 
-    # 随机5注
-    # 规则：从热号集合中机选10个。
-    print("开始随机生成5注，快乐8选10玩法：")
-    for i in range(5):
-        hot_10 = RamdomSet(random_set).get(10)
-        print(f"第{i+1}注: {hot_10}")
+    # 计算选号集合一共有多少中可能性
+    total = scipy.special.comb(len(random_set), 5)
+    print(f"共计{total}种可能性")
+
+    # 计算选号集合中的红球，在过去100期中的表现
+    perform_statistic = PerformStatistic(df, random_set)
+    perform_statistic.perform(20)
+
+    # 随机25注
+    count = 20
+
+    # 规则：从热号集合中机选6个。
+    print(f"开始随机生成{count}注，快乐8选6玩法：")
+    for i in range(count):
+        hot_10 = RamdomSet(random_set).get(6)
+        print(f"第{i + 1}注: {hot_10}")

@@ -8,6 +8,8 @@ Description: 统计方法
 import random
 import copy
 
+from scipy.special import comb
+
 from core.exceptions import AreaCountError
 
 
@@ -106,6 +108,9 @@ class LessStatistic:
         :param top: int. 前N名，默认是前10名
         :return:
         """
+        if period_count > df.shape[0]:
+            period_count = df.shape[0]
+
         target_df = df[:period_count]
 
         # 中奖号码计数
@@ -123,13 +128,14 @@ class LessStatistic:
         sorted_list = sorted(total_dict.items(), key=lambda x: x[1], reverse=False)
 
         # 输出
-        print(f"最近{period_count}期，中奖次数最少的号码如下：")
+        print(f"最近{period_count}期，理论出现次数：{period_count / 4}，中奖次数最少的号码如下：")
         for number, count in sorted_list[:top]:
             print(f"数字：{number}，出现次数: {count}")
 
         # 冷号排序
         sorted_numbers = [l[0] for l in sorted_list[:top]]
         sorted_numbers.sort(reverse=False)
+        print(f"冷号共{len(sorted_numbers)}个")
         print(f"冷号排序: {sorted_numbers}")
 
         return sorted_numbers
@@ -144,10 +150,60 @@ class RamdomSet:
         """从数据集合中随机获取length个元素，并按升序排列后返回"""
         data_copy = copy.deepcopy(self.data)
         random.shuffle(data_copy)
-        result = data_copy[:length]
+        # result = data_copy[:length]
+        result = random.sample(data_copy, length)
         result.sort(reverse=False)
         return result
 
+
+class PerformStatistic:
+    def __init__(self, df, red_set):
+        """
+
+        :param df: pd.DataFrame
+        :param red_set: set. 本期预测号码集合
+        """
+        self.df = df
+        self.red_set = red_set
+
+    def perform(self, days=50):
+        """计算表现"""
+        df = self.df[:days]
+
+        # 1. 输出近50期，每期命中的号码、以及总个数
+        for index, row in df.iterrows():
+            hit_reds = []
+            for numb, is_hit in row.items():
+                numb_int = int(numb)
+                if is_hit and numb_int in self.red_set:
+                    hit_reds.append(numb_int)
+
+            print(f"第{index}期，命中{len(hit_reds)}个：")
+            print(hit_reds)
+            print("---" * 30)
+
+
+class HitRate:
+    def __init__(self, reds, hit_reds, choose=7):
+        """
+        模拟计算中奖率
+
+        :param reds: set. 预选号码集合
+        :param hit_reds: list. 命中红球列表
+        :param choose: int. 选7玩法
+        """
+        self.reds = reds
+        self.hit_reds = hit_reds
+        self.choose = choose
+
+    def calculate_hit_rate(self):
+        """
+        中奖率计算公式：
+
+
+        :return:
+        """
+        pass
 
 if __name__ == '__main__':
     data = '02,07,10,13,28,29,34,36,37,38,44,48,49,50,52,57,59,63,65,72'
