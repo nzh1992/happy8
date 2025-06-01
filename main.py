@@ -71,7 +71,7 @@ def start_statistic(data_list):
 
     # 2. 热力图
     # 预设历史数据期数：20，30，50，100，200，300，500，全部
-    period_count_list = [20, 30, 50, 100, 200, 300, 500, 'all']
+    period_count_list = [5, 10, 20, 30, 50, 100, 200, 300, 500, 'all']
     heat_result_list = []
     for period_count in period_count_list:
         heat_result = HeatStatistic.heat_statistic(data_list, period_count)
@@ -175,6 +175,7 @@ if __name__ == '__main__':
     # 剔除我认为的低概率号
     # 1.1 1~10号
     out_1 = set(range(1, 11))
+
     # 1.2 11~20号
     out_2 = set(range(11, 21))
 
