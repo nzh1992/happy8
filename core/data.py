@@ -94,5 +94,41 @@ class HistoryData:
 
         return numbers_list
 
+    def get_number_df(self, code_from, code_to):
+        """
+        获取指定期号范围的数据
+        :param code_from: str. 起始期号
+        :param code_to: str. 截止期号
+        :return:
+        """
+        # 获取所有数据
+        content = self.get_data(history_count=9999)
+        results = content.get("result")
+
+        index_list = []  # 索引列表
+        data_list = []  # 数据列表
+        column_list = [f"red_{i}" for i in range(1, 21)]
+
+        for result in results:
+            # 保存索引
+            index_list.append(result.get("code"))
+
+            # 保存数据，出现中奖号码为True，未出现为False
+            reds = [int(red) for red in result.get("red").split(",")]
+
+            data_list.append(reds)
+
+        # 创建DF
+        df = pd.DataFrame(data=data_list, index=index_list, columns=column_list)
+
+        # 根据索引筛选数据
+        if code_from not in df.index or code_to not in df.index:
+            raise Exception("期号错误")
+
+        range_df = df.loc[(df.index >= code_from) & (df.index <= code_to)]
+
+        return range_df
+
+
 if __name__ == '__main__':
     HistoryData().get_numbers_list()
